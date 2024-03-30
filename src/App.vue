@@ -1,11 +1,16 @@
-<template>
-  <HomePage msg="Welcome to Your Vue.js App"/>
-</template>
-
 <script setup>
-import HomePage from './pages/HomePage.vue'
+import {RouterView} from "vue-router"
+// import { onMounted } from "vue";
 
+import AppLayout from "./components/layouts/AppLayout.vue"
 </script>
 
-<style>
-</style>./pages/HomePage.vue
+<template>
+  <AppLayout>
+    <RouterView v-slot="{ Component }">
+      <component :is="Component" />
+    </RouterView>
+  </AppLayout>
+</template>
+
+<style></style>
