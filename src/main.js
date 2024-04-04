@@ -1,8 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from "./router/index";
+import router from "./router/index"; 
+import VWave from 'v-wave';
 
 import './index.css'
+import "./style/css/custom.css";
 
-createApp(App).mount('#app')
-createApp(App).use(router);
+const app = createApp(App);
+
+app.use(router);
+app.use(VWave)
+app.mount('#app');

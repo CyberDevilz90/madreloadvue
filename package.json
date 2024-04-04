@@ -10,8 +10,13 @@
   "dependencies": {
     "axios": "^1.6.8",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13",
-    "vue-router": "^4.3.0"
+    "sass": "^1.72.0",
+    "sass-loader": "^14.1.1",
+    "v-wave": "^2.0.0",
+    "vue": "^3.4.14",
+    "vue-loader": "^17.4.2",
+    "vue-router": "^4.3.0",
+    "webpack": "^5.91.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -37,7 +42,16 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {
+      "vue/multi-word-component-names": [
+        "error",
+        {
+          "ignores": []
+        }
+      ],
+      "vue/no-use-v-if-with-v-for": "off",
+      "vue/valid-v-for": "off"
+    }
   },
   "browserslist": [
     "> 1%",
