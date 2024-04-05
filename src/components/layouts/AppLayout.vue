@@ -14,7 +14,7 @@ const updateYear = () => {
 let intervalId;
 
 onMounted(() => {
-  intervalId = setInterval(updateYear, 60000); // Update setiap menit
+  intervalId = setInterval(updateYear, 86400000);
 });
 
 onUnmounted(() => {
@@ -30,10 +30,7 @@ onUnmounted(() => {
         <MainContent>
           <slot></slot>
         </MainContent>
-        <footer class="fixed bottom-0 left-0 right-0 py-2 text-center bg-white">
-          <p class="text-xs">Copyright {{ currentYear }} MAD GROUP</p>
-          <p class="text-xs">Designed and Developed by Ahmad Mahmudi</p>
-        </footer>
+        <footer></footer>
       </main>
     </div>
   </div>

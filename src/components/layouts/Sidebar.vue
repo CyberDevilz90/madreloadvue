@@ -6,17 +6,15 @@ import logoMadreloadText from "../../assets/images/madreloadText.png";
 
 import { useRoute } from "vue-router";
 
-const inActiveButton = "bg-blue-100 hover:bg-white hover:text-black";
-const activeButton = "text-black bg-slate-50 hover:text-red-600";
+const inActiveButton = "bg-slate-300 hover:bg-white hover:text-black";
+const activeButton = "text-black bg-white hover:text-red-600";
 const route = useRoute();
 
-// import { ref } from "vue"
-// const sidebar = ref(null);
 </script>
 
 <template>
   <aside
-    class="w-80 h-screen bg-[#2af0d5] hidden lg:flex lg:sticky top-0 z-50 overflow-hidden"
+    class="w-96 h-screen bg-[#00d2d3] hidden lg:flex lg:sticky top-0 z-50 overflow-hidden"
   >
     <FlexBox :flex-col="true" :full="true" gap="extra large">
       <div class="flex items-center justify-start w-full gap-0 px-4 mt-7">
@@ -41,17 +39,84 @@ const route = useRoute();
           :routerClass="[
             `w-full h-12 flex justify-start pl-6 items-center rounded-md
                               cursor-pointer duration-200 ease-in-out`,
-            route.name === 'Home' ? activeButton : inActiveButton,
+            /home/gi.test(route.path) ? activeButton : inActiveButton,
           ]"
           iconClass="mdi mdi-home text-xl text-black"
           destination="/"
         />
-        <div>Riwayat</div>
-        <div>Daftar Harga</div>
-        <div>Kalkulator ML</div>
-        <div>Blog</div>
-        <div>Profile</div>
-        <div>Log In / LogOut</div>
+        <SideBarRoute
+          routeName="History"
+          :routerClass="[
+            `w-full h-12 flex justify-start pl-6 items-center rounded-md
+                              cursor-pointer duration-200 ease-in-out`,
+            /history/gi.test(route.path) ? activeButton : inActiveButton,
+          ]"
+          iconClass="mdi mdi-history text-xl text-black"
+          destination="/history"
+        />
+        <SideBarRoute
+          routeName="Daftar Harga"
+          :routerClass="[
+            `w-full h-12 flex justify-start pl-6 items-center rounded-md
+                              cursor-pointer duration-200 ease-in-out`,
+            /price-list/gi.test(route.path) ? activeButton : inActiveButton,
+          ]"
+          iconClass="mdi mdi-book text-xl text-black"
+          destination="/price-list"
+        />
+        <SideBarRoute
+          routeName="Kalkulator ML"
+          :routerClass="[
+            `w-full h-12 flex justify-start pl-6 items-center rounded-md
+                              cursor-pointer duration-200 ease-in-out`,
+            /calculator/gi.test(route.path) ? activeButton : inActiveButton,
+          ]"
+          iconClass="mdi mdi-calculator text-xl text-black"
+          destination="/calculator"
+        />
+        <SideBarRoute
+          routeName="Blog"
+          :routerClass="[
+            `w-full h-12 flex justify-start pl-6 items-center rounded-md
+                              cursor-pointer duration-200 ease-in-out`,
+            /blog/gi.test(route.path) ? activeButton : inActiveButton,
+          ]"
+          iconClass="mdi mdi-blogger text-xl text-black"
+          destination="/blog"
+        />
+        <SideBarRoute
+          routeName="Profile"
+          :routerClass="[
+            `w-full h-12 flex justify-start pl-6 items-center rounded-md
+                              cursor-pointer duration-200 ease-in-out`,
+            /profile/gi.test(route.path) ? activeButton : inActiveButton,
+          ]"
+          iconClass="mdi mdi-account text-xl text-black"
+          destination="/profile"
+        />
+      </div>
+      <div class="flex flex-col gap-10 p-5">
+        <div class="flex flex-col justify-center gap-1">
+          <div>
+            <i class="text-sm mdi mdi-whatsapp"></i>
+            <span class="text-xs"> Whatsapp : 085866294698</span>
+          </div>
+          <div>
+            <i class="text-sm mdi mdi-email"></i>
+            <span class="text-xs"> Email : ahmadmahmudi2000@gmail.com</span>
+          </div>
+          <div>
+            <i class="text-sm mdi mdi-google-maps"></i>
+            <span class="text-xs">
+              Alamat : Kel. Kalangan, Kec. Pedan, Kab. Klaten, Provinsi Jawa
+              Tengah</span
+            >
+          </div>
+        </div>
+        <div class="flex flex-col text-center">
+          <p class="text-xs">Copyright {{ currentYear }} MAD GROUP</p>
+          <p class="text-xs">Designed and Developed by Ahmad Mahmudi</p>
+        </div>
       </div>
     </FlexBox>
   </aside>
