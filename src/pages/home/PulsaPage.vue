@@ -2,11 +2,17 @@
 import { ref } from "vue";
 import { listProdukPulsa } from "../../lib/produkPulsa";
 import { formatPrice } from "../../lib/utils";
+import { pulsaProviders } from "@/lib/provider";
+
+import ListProduct from "../../components/ui/ListProduct.vue";
 
 const selectedProvider = ref("");
 const selectedType = ref("");
-
 const selectedProducts = ref([]);
+const listProviders = pulsaProviders.map((data) => data);
+// eslint-disable-next-line
+let buyer_sku_code = ref(null)
+let nomor_pelanggan = ref(null)
 
 function filterProducts() {
   selectedProducts.value = listProdukPulsa.filter((product) => {
@@ -21,6 +27,14 @@ function filterProducts() {
   selectedProducts.value.sort((a, b) => a.price - b.price);
   selectedProducts.value.forEach((product) => {
     product.formattedPrice = formatPrice(product.price);
+    product.selected = false;
+  });
+}
+
+function selectProduct(productId) {
+  buyer_sku_code = productId
+  selectedProducts.value.forEach((product) => {
+    product.selected = product.buyer_sku_code === productId; 
   });
 }
 </script>
@@ -31,6 +45,7 @@ function filterProducts() {
         class="w-1/4 p-[8px] rounded-md"
         type="number"
         placeholder="Nomor Tujuan"
+        v-model.lazy="nomor_pelanggan"
       />
       <select
         @change="filterProducts"
@@ -38,13 +53,13 @@ function filterProducts() {
         class="w-1/4 p-[8px] rounded-md ml-3"
       >
         <option value="">Pilih Provider</option>
-        <option value="AXIS">Axis</option>
-        <option value="by.U">By.U</option>
-        <option value="INDOSAT">Indosat Ooredoo</option>
-        <option value="SMARTFREN">Smartfren</option>
-        <option value="TELKOMSEL">Telkomsel</option>
-        <option value="TRI">Tri</option>
-        <option value="XL">XL Axiata</option>
+        <option
+          v-for="provider in listProviders"
+          :value="provider.value"
+          :key="provider"
+        >
+          {{ provider.name }}
+        </option>
       </select>
       <select
         @change="filterProducts"
@@ -56,34 +71,17 @@ function filterProducts() {
         <option value="Umum">Umum</option>
         <option value="Pulsa Transfer">Transfer</option>
       </select>
-      <div  class="w-1/4 p-[8px] rounded-md text-center bg-green-600 hover:cursor-pointer">
+      <div
+        class="w-1/4 p-[8px] rounded-md text-center bg-green-600 hover:cursor-pointer"
+      >
         <p class="font-bold text-white">Checkout</p>
       </div>
     </div>
     <div class="p-5 mb-10 card">
-      <div v-if="selectedProducts.length">
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
-          <div
-            v-for="product in selectedProducts"
-            :key="product.buyer_sku_code"
-            class="p-4 bg-white rounded shadow-md"
-          >
-            <div
-              class="bg-gradient-to-r from-cyan-500 to-blue-500 mt-[-1rem] text-center rounded-b-full h-8 mb-4 flex items-center justify-center"
-            >
-              <p class="text-sm font-bold text-white">
-                Rp {{ product.formattedPrice }}
-              </p>
-            </div>
-            <h3 class="mb-2 font-semibold text">
-              {{ product.product_name }}
-            </h3>
-          </div>
-        </div>
-      </div>
-      <div v-else>
-        <p class="text-center">Produk Kosong</p>
-      </div>
+      <ListProduct
+        :selectedProducts="selectedProducts"
+        @select="selectProduct"
+      />
     </div>
   </div>
 </template>

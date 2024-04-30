@@ -1,40 +1,19 @@
 export const pulsaProviders = [
-  {
-    "name" : "Indosat",
-    "path" : "/pulsa/indosat"
-  },
-  {
-    "name" : "Telkomsel",
-    "path" : "/pulsa/telkomsel"
-  },
-  {
-    "name" : "Axis",
-    "path" : "/pulsa/axis"
-  },
-  {
-    "name" : "Smartfren",
-    "path" : "/pulsa/smartfren"
-  },
-  {
-    "name" : "Three",
-    "path" : "/pulsa/three"
-  },
-  {
-    "name" : "XL",
-    "path" : "/pulsa/xl"
-  },
-  {
-    "name" : "By.u",
-    "path" : "/pulsa/byu"
-  },
-  ];
+  { name: "Axis", value: "AXIS" },
+  { name: "By.U", value: "by.U" },
+  { name: "Indosat Ooredoo", value: "INDOSAT" },
+  { name: "Smartfren", value: "SMARTFREN" },
+  { name: "Telkomsel", value: "TELKOMSEL" },
+  { name: "Tri", value: "TRI" },
+  { name: "XL Axiata", value: "XL" },
+];
 
 export const paketDataProviders = [
-    "Indosat", 
-    "Telkomsel", 
-    "Axis", 
-    "Smartfren", 
-    "3", 
-    "XL", 
-    "By.U"
-  ];
+  "Axis",
+  "By.U",
+  "Indosat",
+  "Smartfren",
+  "Telkomsel",
+  "3",
+  "XL",
+];

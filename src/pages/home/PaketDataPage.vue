@@ -4,6 +4,8 @@ import { listProdukPulsa } from "../../lib/produkPulsa";
 import { listTipeData } from "../../lib/tipePaketData";
 import { formatPrice } from "../../lib/utils";
 
+import ListProduct from "@/components/ui/ListProduct.vue";
+
 const selectedProvider = ref("");
 const selectedType = ref("");
 const selectedProducts = ref([]);
@@ -30,6 +32,13 @@ function filterProducts() {
   selectedProducts.value.sort((a, b) => a.price - b.price);
   selectedProducts.value.forEach((product) => {
     product.formattedPrice = formatPrice(product.price);
+    product.selected = false;
+  });
+}
+
+function selectProduct(productId) {
+  selectedProducts.value.forEach((product) => {
+    product.selected = product.buyer_sku_code === productId; // Menandai produk yang dipilih
   });
 }
 
@@ -79,30 +88,10 @@ watch(selectedProvider, (newValue) => {
     </div>
 
     <div class="p-5 card">
-      <div v-if="selectedProducts.length">
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div
-            v-for="product in selectedProducts"
-            :key="product.buyer_sku_code"
-            class="p-4 bg-white rounded shadow-md"
-          >
-            <div
-              class="bg-gradient-to-r from-cyan-500 to-blue-500 mt-[-1rem] text-center rounded-b-full h-8 mb-4 flex items-center justify-center"
-            >
-              <p class="text-sm font-bold text-white">
-                Rp {{ product.formattedPrice }}
-              </p>
-            </div>
-            <h3 class="mb-2 font-semibold">
-              {{ product.product_name }}
-            </h3>
-            <p class="text-sm text-gray-600">{{ product.desc }}</p>
-          </div>
-        </div>
-      </div>
-      <div v-else>
-        <p class="text-center">Produk Kosong</p>
-      </div>
+      <ListProduct
+        :selectedProducts="selectedProducts"
+        @select="selectProduct"
+      />
     </div>
   </div>
 </template>

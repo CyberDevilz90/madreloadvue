@@ -16,7 +16,7 @@ export const menu = [
         "path": "/home/e-wallet"
     },
     {
-        "name" : "Tagihan",
+        "name" : "PLN",
         "path": "/home/tagihan"
     },
     {
