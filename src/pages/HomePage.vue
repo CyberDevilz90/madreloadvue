@@ -1,9 +1,5 @@
 <script setup>
 import { menu } from "../lib/listmenu"
-
-// import { useRoute } from "vue-router";
-
-// const route = useRoute();
 </script>
 <template>
   <div class="p-5 mb-5">
