@@ -1,29 +1,36 @@
 <script setup>
 import { ref, watch } from "vue";
-import { listProdukPulsa } from "../../lib/produkPulsa";
 import { formatPrice } from "../../lib/utils";
 import { game } from "../../lib/listGame";
+import axios from "axios";
 
-import ListProduct from "../../components/ui/ListProduct.vue"
+import ListProduct from "../../components/ui/ListProduct.vue";
 
-const filteredProducts = ref([]);
-
-listProdukPulsa.forEach((product) => {
-  if (product.category === "Games") {
-    filteredProducts.value.push(product);
-  }
-});
-
-// Filter produk berdasarkan merek yang valid
+let listProdukPulsa = ref([]);
 const selectedProducts = ref([]);
 const gameOptions = ref(game);
 const selectedGame = ref("");
+let userId = ref("");
 
-// Memfilter produk berdasarkan merek (brand) permainan yang dipilih
+async function fetchData() {
+  try {
+    const apiUrl = `${
+      process.env.VUE_APP_BE_API_URL || "http://127.0.0.1:5000"
+    }/product/list-ppob`;
+    const response = await axios.get(apiUrl);
+    listProdukPulsa.value = response.data.data; // Store fetched data
+    filterSelectedProducts(); // Filter products based on initial state
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
 const filterSelectedProducts = () => {
-  selectedProducts.value = filteredProducts.value
+  selectedProducts.value = listProdukPulsa.value
     .filter((product) => {
-      return product.brand === selectedGame.value;
+      return (
+        product.category === "Games" && product.brand === selectedGame.value
+      );
     })
     .map((product) => {
       return {
@@ -51,7 +58,7 @@ const getGameKeterangan = (selectedGameName) => {
 
 // Memanggil fungsi filterSelectedProducts saat perubahan pada selectedGame
 watch(selectedGame, () => {
-  filterSelectedProducts();
+  fetchData();
 });
 
 // Fungsi untuk checkout
@@ -92,14 +99,14 @@ const checkout = () => {
       </div>
     </div>
     <div class="flex justify-center gap-3 p-5 mb-5 card">
-        {{ selectedGame }}
+      {{ selectedGame }}
       <p>Keterangan : {{ getGameKeterangan(selectedGame) }}</p>
     </div>
 
     <div class="p-5 card">
       <ListProduct
-      :selectedProducts="selectedProducts"
-      @select="selectProduct"
+        :selectedProducts="selectedProducts"
+        @select="selectProduct"
       />
     </div>
   </div>

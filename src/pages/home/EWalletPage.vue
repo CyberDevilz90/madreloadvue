@@ -1,29 +1,38 @@
 <script setup>
 import { ref, watch } from "vue";
-import { listProdukPulsa } from "../../lib/produkPulsa";
+// import { listProdukPulsa } from "../../lib/produkPulsa";
 import { formatPrice } from "../../lib/utils";
 import { wallet } from "../../lib/ewallet";
+import axios from "axios";
 
 import ListProduct from "@/components/ui/ListProduct.vue";
 
-const filteredProducts = ref([]);
-
-listProdukPulsa.forEach((product) => {
-  if (product.category === "E-Money") {
-    filteredProducts.value.push(product);
-  }
-});
+// const filteredProducts = ref([]);
+let userId = ref("");
 
 // Filter produk berdasarkan merek yang valid
+let listProdukPulsa = ref([])
 const selectedProducts = ref([]);
 const gameOptions = ref(wallet);
 const selectedGame = ref("");
 
+async function fetchData() {
+  try {
+    const apiUrl = `${
+      process.env.VUE_APP_BE_API_URL || "http://127.0.0.1:5000"
+    }/product/list-ppob`;
+    const response = await axios.get(apiUrl);
+    listProdukPulsa.value = response.data.data; // Store fetched data
+    filterSelectedProducts(); // Filter products based on initial state
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
 // Memfilter produk berdasarkan merek (brand) permainan yang dipilih
 const filterSelectedProducts = () => {
-  selectedProducts.value = filteredProducts.value
+  selectedProducts.value = listProdukPulsa.value
     .filter((product) => {
-      return product.brand === selectedGame.value;
+      return product.category === "E-Money" && product.brand === selectedGame.value;
     })
     .map((product) => {
       return {
@@ -54,7 +63,7 @@ function selectProduct(productId) {
 
 // Memanggil fungsi filterSelectedProducts saat perubahan pada selectedGame
 watch(selectedGame, () => {
-  filterSelectedProducts();
+  fetchData();
 });
 
 // Fungsi untuk checkout

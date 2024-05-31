@@ -1,28 +1,48 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import axios from "axios";
-import { listProdukPulsa } from "../../lib/produkPulsa";
+import { formatPrice } from "../../lib/utils";
+// import { listProdukPulsa } from "../../lib/produkPulsa";
 
 import ListProduct from "@/components/ui/ListProduct.vue";
 
 const apiResponse = ref(null);
 const userId = ref("");
-const filteredProducts = ref([]);
+// const filteredProducts = ref([]);
+let listProdukPulsa = ref([])
+// const selectedProvider = ref("");
+// const selectedType = ref("");
+const selectedProducts = ref([]);
 // eslint-disable-next-line
 let buyer_sku_code = ref(null);
 
-
-// Filter produk berdasarkan kategori "PLN"
-listProdukPulsa.forEach((product) => {
-  if (product.category === "PLN") {
-    filteredProducts.value.push(product);
-    product.selected = false;
+async function fetchData() {
+  try {
+    const apiUrl = `${
+      process.env.VUE_APP_BE_API_URL || "http://127.0.0.1:5000"
+    }/product/list-ppob`;
+    const response = await axios.get(apiUrl);
+    listProdukPulsa.value = response.data.data; // Store fetched data
+    filterProducts(); // Filter products based on initial state
+  } catch (error) {
+    // console.error("Error fetching data:", error);
   }
-});
+}
+// Filter produk berdasarkan kategori "PLN"
+function filterProducts() {
+  selectedProducts.value = listProdukPulsa.value.filter((product) => {
+    return (product.category === "PLN")
+  });
+  selectedProducts.value.sort((a, b) => a.price - b.price);
+  selectedProducts.value.forEach((product) => {
+    product.formattedPrice = formatPrice(product.price);
+    product.selected = false;
+  });
+}
 
 const selectProduct = (productId) => {
   buyer_sku_code = productId
-  filteredProducts.value.forEach((product) => {
+  selectedProducts.value.forEach((product) => {
     product.selected = product.buyer_sku_code === productId; 
   });
 };
@@ -36,9 +56,11 @@ const handleInputCompletion = () => {
 
   // Menggunakan axios untuk mengirim permintaan POST ke API
   axios
-    .post("https://api.digiflazz.com/v1/transaction", requestData)
+    .post("https://api.digiflazz.com/v1/transaction", requestData, {headers: {
+      "Access-Control-Allow-Origin": "*"
+    }})
     .then((response) => {
-      console.log("Response from API:", response.data);
+      // console.log("Response from API:", response.data);
       // Menyimpan respons dari permintaan API
       apiResponse.value = response.data;
     })
@@ -46,6 +68,10 @@ const handleInputCompletion = () => {
       console.error("Error while sending request:", error);
       // Tangani kesalahan jika terjadi
     });
+};
+const checkout = () => {
+  // Lakukan logika checkout di sini
+  console.log("Checkout triggered");
 };
 
 watch(userId, () => {
@@ -55,10 +81,9 @@ watch(userId, () => {
   }
 });
 
-const checkout = () => {
-  // Lakukan logika checkout di sini
-  console.log("Checkout triggered");
-};
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <template>
@@ -83,8 +108,7 @@ const checkout = () => {
     </div>
     <div class="p-5 card">
       <ListProduct
-        :selectedProducts="filteredProducts"
-        :filteredProducts="filteredProducts"
+        :selectedProducts="selectedProducts"
         @select="selectProduct"
       />
     </div>

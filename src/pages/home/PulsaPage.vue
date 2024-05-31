@@ -1,9 +1,8 @@
 <script setup>
-import { ref } from "vue";
-import { listProdukPulsa } from "../../lib/produkPulsa";
+import { onMounted, ref } from "vue";
 import { formatPrice } from "../../lib/utils";
 import { pulsaProviders } from "@/lib/provider";
-
+import axios from "axios";
 import ListProduct from "../../components/ui/ListProduct.vue";
 
 const selectedProvider = ref("");
@@ -11,11 +10,25 @@ const selectedType = ref("");
 const selectedProducts = ref([]);
 const listProviders = pulsaProviders.map((data) => data);
 // eslint-disable-next-line
-let buyer_sku_code = ref(null)
-let nomor_pelanggan = ref(null)
+let buyer_sku_code = ref(null);
+let nomor_pelanggan = ref(null);
+let listProdukPulsa = ref([]);
+
+async function fetchData() {
+  try {
+    const apiUrl = `${
+      process.env.VUE_APP_BE_API_URL || "http://127.0.0.1:5000"
+    }/product/list-ppob`;
+    const response = await axios.get(apiUrl);
+    listProdukPulsa.value = response.data.data; // Store fetched data
+    filterProducts(); // Filter products based on initial state
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
 
 function filterProducts() {
-  selectedProducts.value = listProdukPulsa.filter((product) => {
+  selectedProducts.value = listProdukPulsa.value.filter((product) => {
     return (
       (product.category === selectedType.value &&
         product.brand === selectedProvider.value) ||
@@ -32,11 +45,15 @@ function filterProducts() {
 }
 
 function selectProduct(productId) {
-  buyer_sku_code = productId
+  buyer_sku_code = productId;
   selectedProducts.value.forEach((product) => {
-    product.selected = product.buyer_sku_code === productId; 
+    product.selected = product.buyer_sku_code === productId;
   });
 }
+
+onMounted(() => {
+  fetchData();
+});
 </script>
 <template>
   <div class="p-5 mb-5">
