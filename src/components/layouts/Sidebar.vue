@@ -3,7 +3,6 @@ import FlexBox from "../ui/FlexBox.vue";
 import SideBarRoute from "../ui/SideBarRoute.vue";
 import logoMadreload from "../../assets/images/madreloadIcon.png";
 import logoMadreloadText from "../../assets/images/madreloadText.png";
-
 import { useRoute } from "vue-router";
 
 const inActiveButton = "bg-slate-300 hover:bg-white hover:text-black";
@@ -96,27 +95,7 @@ const route = useRoute();
         />
       </div>
       <div class="flex flex-col gap-10 p-5">
-        <div class="flex flex-col justify-center gap-1">
-          <div>
-            <i class="text-sm mdi mdi-whatsapp"></i>
-            <span class="text-xs"> Whatsapp : 085866294698</span>
-          </div>
-          <div>
-            <i class="text-sm mdi mdi-email"></i>
-            <span class="text-xs"> Email : ahmadmahmudi2000@gmail.com</span>
-          </div>
-          <div>
-            <i class="text-sm mdi mdi-google-maps"></i>
-            <span class="text-xs">
-              Alamat : Kel. Kalangan, Kec. Pedan, Kab. Klaten, Provinsi Jawa
-              Tengah</span
-            >
-          </div>
-        </div>
-        <div class="flex flex-col text-center">
-          <p class="text-xs">Copyright {{ currentYear }} MAD GROUP</p>
-          <p class="text-xs">Designed and Developed by Ahmad Mahmudi</p>
-        </div>
+        
       </div>
     </FlexBox>
   </aside>
