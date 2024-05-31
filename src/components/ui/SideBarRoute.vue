@@ -6,7 +6,7 @@ export default {
       type: String,
     },
     routerClass: {
-      type: String,
+      type: [String, Array],
     },
     iconClass: {
       type: String,

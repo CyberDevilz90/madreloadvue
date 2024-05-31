@@ -15,6 +15,7 @@ const listCategories = [
 const commentInput = ref("");
 const totalPrice = ref(null);
 const jumlahInput = ref("");
+const userId = ref("");
 
 function filterProducts() {
   selectedProducts.value = listSocialMedia.filter((product) => {
@@ -70,6 +71,7 @@ watch(
         class="w-1/3 p-[8px] rounded-md"
         type="text"
         placeholder="Username / Link"
+        v-model="userId"
       />
       <input
         class="w-1/3 p-[8px] rounded-md"

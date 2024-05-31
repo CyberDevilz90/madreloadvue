@@ -52,8 +52,8 @@
           >Jangan</span
         >&nbsp;menggunakan lebih dari satu layanan sekaligus untuk username/link
         yang sama. Harap tunggu status&nbsp;<span
-          style="background-color: rgb(57, 123, 33)"
-          ><font color="#ffffff">completed</font></span
+          style="background-color: rgb(57, 123, 33); color: white"
+          >completed</span
         >&nbsp;pada orderan sebelumnya baru melakukan orderan kepada username/
         link yang sama. Hal ini&nbsp;<span
           style="background-color: rgb(255, 255, 0)"
@@ -75,16 +75,16 @@
       </li>
       <li style="text-align: justify">
         5. Jika Orderan status&nbsp;<span
-          style="background-color: rgb(231, 148, 57)"
-          ><font color="#ffffff">partial</font></span
-        >&nbsp;&amp;&nbsp;<span style="background-color: rgb(206, 0, 0)"
-          ><font color="#ffffff">canceled</font></span
+          style="background-color: rgb(231, 148, 57); color: white"
+          >partial</span
+        >&nbsp;&amp;&nbsp;<span style="background-color: rgb(206, 0, 0); color: white"
+          >canceled</span
         >&nbsp;, saldo otomatis di refund dan bisa order ulang!
       </li>
       <li style="text-align: justify">
         6.
-        <span style="background-color: rgb(156, 0, 255)"
-          ><font color="#ffffff">Jumlah maks</font></span
+        <span style="background-color: rgb(156, 0, 255); color: white"
+          >Jumlah maks</span
         >&nbsp;menunjukkan kapasitas layanan tersebut untuk satu target
         (akun/link) bukan menunjukkan kapasitas maks sekali order. Apabila Anda
         telah menggunakan semua kapasitas maks layanan,<span
@@ -101,8 +101,8 @@
         setelah 24 jam orderan disubmit.
       </li>
       <li style="text-align: justify">
-        8. Dengan melakukan orderan Anda dianggap sudah memahami
-        Syarat dan Ketentuan&nbsp;Madreload.
+        8. Dengan melakukan orderan Anda dianggap sudah memahami Syarat dan
+        Ketentuan&nbsp;Madreload.
       </li>
     </ol>
     <p style="text-align: center">
@@ -163,8 +163,8 @@
     </p>
     <p style="text-align: justify">
       <span style="color: rgb(76, 86, 103); text-align: center"
-        >Apabila drop&nbsp;<span style="background-color: rgb(255, 255, 0)"
-          >down menu pada category dan service tidak muncul</span
+        >Apabila&nbsp;<span style="background-color: rgb(255, 255, 0)"
+          >drop down menu pada category dan service tidak muncul</span
         >, pastikan settingan Javascript pada browser Anda sudah diizinkan /
         allowed ya. Jika menggunakan browser google chrome silahkan ke menu
         Settings &gt; Site Setting &gt; Javascript pilih allowed /
