@@ -1,7 +1,5 @@
 <script setup>
 import {RouterView} from "vue-router"
-// import { onMounted } from "vue";
-
 import AppLayout from "./components/layouts/AppLayout.vue"
 </script>
 
