@@ -2,16 +2,13 @@
 import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { formatPrice } from "../../lib/utils";
-// import { listProdukPulsa } from "../../lib/produkPulsa";
+
 
 import ListProduct from "@/components/ui/ListProduct.vue";
 
 const apiResponse = ref(null);
 const userId = ref("");
-// const filteredProducts = ref([]);
 let listProdukPulsa = ref([])
-// const selectedProvider = ref("");
-// const selectedType = ref("");
 const selectedProducts = ref([]);
 // eslint-disable-next-line
 let buyer_sku_code = ref(null);
@@ -25,7 +22,7 @@ async function fetchData() {
     listProdukPulsa.value = response.data.data; // Store fetched data
     filterProducts(); // Filter products based on initial state
   } catch (error) {
-    // console.error("Error fetching data:", error);
+    console.error("Error fetching data:", error);
   }
 }
 // Filter produk berdasarkan kategori "PLN"

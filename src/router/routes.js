@@ -12,6 +12,12 @@ import { socialMediaPage } from "./root/home/social-media"
 import { pulsaPage } from "./root/home/pulsa"
 import { paketDataPage } from "./root/home/paket-data"
 import { gamesPage } from "./root/home/games"
+import { loginPage } from "./root/auth/login";
+import { registerPage } from "./root/auth/register";
+import { adminPage } from "./root/admin";
+import { manageUser } from "./root/admin/manageUser";
+import { topUpMember } from "./root/admin/topUpManual";
+import { setMargin } from "./root/admin/setMargin";
 
 export const routes = root.concat(
   homePage,
@@ -26,5 +32,11 @@ export const routes = root.concat(
   socialMediaPage,
   pulsaPage,
   paketDataPage,
-  gamesPage
+  gamesPage,
+  loginPage,
+  registerPage,
+  adminPage,
+  manageUser,
+  topUpMember,
+  setMargin
 );

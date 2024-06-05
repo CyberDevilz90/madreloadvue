@@ -9,10 +9,10 @@ import { menu } from "../lib/listmenu"
       >
         <p class="font-bold text-white">Menu</p>
       </div>
-      <ul class="flex flex-row gap-2">
+      <ul class="flex flex-row flex-wrap justify-center gap-2">
         <li v-for="(category, index) in menu" :key="index">
           <RouterLink :to="category.path">
-            <img class="w-[250px]" src="../assets/images/madreloadIcon.png" alt="logo" />
+            <img class="w-[200px]" src="../assets/images/madreloadIcon.png" alt="logo" />
             <p class="text-center">{{ category.name }}</p>
           </RouterLink>
         </li>

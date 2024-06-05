@@ -6,12 +6,13 @@
           v-for="product in selectedProducts"
           :key="product.buyer_sku_code"
           :class="[
-            'p-4 bg-white rounded shadow-md hover:cursor-pointer',
+            'p-4 rounded shadow-md hover:cursor-pointer',
+            product.selected ? 'bg-slate-300' : 'bg-white'
           ]"
           @click="selectProduct(product)"
         >
           <div
-            class="bg-gradient-to-r from-cyan-500 to-blue-500 mt-[-1rem] text-center rounded-b-full h-8 mb-4 flex items-center justify-center"
+            class="bg-gradient-to-r from-cyan-500 to-blue-500 mt-[-1rem] text-center rounded-b-full h-8 mb-3 flex items-center justify-center"
           >
             <p class="text-sm font-bold text-white">Rp {{ product.price }}</p>
           </div>

@@ -16,7 +16,7 @@ import { currentYear } from "@/lib/utils";
         <div>
           <i class="text-sm mdi mdi-google-maps"></i>
           <span class="text-xs">
-            Alamat : Kel. Kalangan, Kec. Pedan, Kab. Klaten, Provinsi Jawa
+            Alamat : Kel. Kalangan, Kec. Pedan, Kab. Klaten, Jawa
             Tengah</span
           >
         </div>

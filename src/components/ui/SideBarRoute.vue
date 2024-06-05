@@ -23,7 +23,7 @@ export default {
     <RouterLink :to="destination" :class="routerClass">
       <div class="flex items-center justify-start gap-4">
         <i id="navButtIcon" :class="iconClass"></i>
-        <span id="navButtIcon" class="font-bold">{{ routeName }}</span>
+        <span id="navButtIcon" class="font-bold md:hidden lg:inline">{{ routeName }}</span>
       </div>
     </RouterLink>
   </div>
