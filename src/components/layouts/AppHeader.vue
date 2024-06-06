@@ -3,7 +3,6 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/store/modules/auth";
 
-
 const auth = useAuthStore()
 const route = useRoute();
 const currentTime = ref(new Date().toLocaleTimeString());
@@ -34,6 +33,9 @@ onUnmounted(() => {
       </p>
     </div>
     <div class="flex items-center gap-6">
+      <div>
+        <p class="font-bold text-blue-800">Rp {{auth.user.saldo}}</p>
+      </div>
       <div>
         <p class="font-bold text-blue-800">{{auth.user.name}}</p>
       </div>

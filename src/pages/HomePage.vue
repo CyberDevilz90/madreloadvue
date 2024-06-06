@@ -1,5 +1,19 @@
 <script setup>
+import { onMounted } from "vue";
 import { menu } from "../lib/listmenu"
+import { useAuthStore } from "@/store/modules/auth";
+
+const auth = useAuthStore();
+
+onMounted(async () => {
+  try {
+    const response = await auth.fetchUserByToken();
+    console.log("User data fetched successfully:", response.data);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+});
+
 </script>
 <template>
   <div class="p-5 mb-5">
