@@ -7,8 +7,8 @@ const auth = useAuthStore();
 
 onMounted(async () => {
   try {
+    // eslint-disable-next-line
     const response = await auth.fetchUserByToken();
-    console.log("User data fetched successfully:", response.data);
   } catch (error) {
     console.error("Error fetching user data:", error);
   }

@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/store/modules/auth";
+import { formatPrice } from "@/lib/utils";
 
-const auth = useAuthStore()
+const auth = useAuthStore();
 const route = useRoute();
 const currentTime = ref(new Date().toLocaleTimeString());
 let intervalId;
@@ -11,6 +12,11 @@ let intervalId;
 const updateTime = () => {
   currentTime.value = new Date().toLocaleTimeString();
 };
+
+const formattedSaldo = computed(() => {
+  return auth.user && auth.user.saldo ? formatPrice(auth.user.saldo) : 'N/A';
+});
+
 onMounted(() => {
   intervalId = setInterval(updateTime, 1000);
 });
@@ -18,10 +24,9 @@ onUnmounted(() => {
   clearInterval(intervalId);
 });
 </script>
+
 <template>
-  <header
-    class="flex flex-row items-center justify-between w-full h-16 p-6 bg-white lg:tw-flex tw-px-4 2xl:hidden"
-  >
+  <header class="flex flex-row items-center justify-between w-full h-16 p-6 bg-white lg:tw-flex tw-px-4 2xl:hidden">
     <div class="flex">
       <p class="font-bold text-blue-800">
         {{ currentTime }}
@@ -34,10 +39,10 @@ onUnmounted(() => {
     </div>
     <div class="flex items-center gap-6">
       <div>
-        <p class="font-bold text-blue-800">Rp {{auth.user.saldo}}</p>
+        <p class="font-bold text-blue-800">{{ formattedSaldo }}</p>
       </div>
       <div>
-        <p class="font-bold text-blue-800">{{auth.user.name}}</p>
+        <p class="font-bold text-blue-800">{{ auth.user.name }}</p>
       </div>
     </div>
   </header>
