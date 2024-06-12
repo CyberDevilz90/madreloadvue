@@ -6,8 +6,9 @@ import { formatPrice } from "../../lib/utils";
 
 import ListProduct from "@/components/ui/ListProduct.vue";
 
-const apiResponse = ref(null);
+const apiResponse = ref("");
 const userId = ref("");
+const pesanError = ref("");
 let listProdukPulsa = ref([])
 const selectedProducts = ref([]);
 // eslint-disable-next-line
@@ -45,27 +46,20 @@ const selectProduct = (productId) => {
 };
 
 const handleInputCompletion = () => {
-  // Membuat objek JSON dengan data yang diperlukan
+  const inputUserId  = userId.value;
   const requestData = {
-    commands: "pln-subscribe",
-    customer_no: userId.value, // Menggunakan nilai dari input sebagai nomor pelanggan
+    userId: inputUserId 
   };
-
-  // Menggunakan axios untuk mengirim permintaan POST ke API
   axios
-    .post("https://api.digiflazz.com/v1/transaction", requestData, {headers: {
-      "Access-Control-Allow-Origin": "*"
-    }})
+    .post("http://localhost:5000/utils/validasi-pln", requestData)
     .then((response) => {
-      // console.log("Response from API:", response.data);
-      // Menyimpan respons dari permintaan API
-      apiResponse.value = response.data;
+      apiResponse.value = response.data.data;
     })
     .catch((error) => {
-      console.error("Error while sending request:", error);
-      // Tangani kesalahan jika terjadi
+      pesanError.value = error.message
     });
 };
+
 const checkout = () => {
   // Lakukan logika checkout di sini
   console.log("Checkout triggered");
@@ -73,7 +67,6 @@ const checkout = () => {
 
 watch(userId, () => {
   if (userId.value !== "") {
-    // Pastikan userId tidak kosong
     handleInputCompletion();
   }
 });
@@ -89,7 +82,7 @@ onMounted(() => {
       <input
         v-model.lazy="userId"
         class="w-1/3 p-[8px] rounded-md"
-        type="number"
+        type="text"
         placeholder="No Pelanggan"
       />
       <div
@@ -101,7 +94,10 @@ onMounted(() => {
     </div>
     <div class="flex flex-col items-center justify-center gap-3 p-5 mb-5 card">
       <p>Informasi Pelanggan :</p>
-      <pre>{{ apiResponse }}</pre>
+      <pre>{{ pesanError || "" }}</pre>
+      <pre>{{ apiResponse.meter_no || "" }}</pre>
+      <pre>{{ apiResponse.name || "" }}</pre>
+      <pre>{{ apiResponse.segment_power || "" }}</pre>
     </div>
     <div class="p-5 card">
       <ListProduct

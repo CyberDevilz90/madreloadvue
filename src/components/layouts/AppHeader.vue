@@ -14,19 +14,25 @@ const updateTime = () => {
 };
 
 const formattedSaldo = computed(() => {
-  return auth.user && auth.user.saldo ? formatPrice(auth.user.saldo) : 'N/A';
+  return auth.user && auth.user.saldo ? formatPrice(auth.user.saldo) : "N/A";
 });
 
 onMounted(() => {
+  if (!auth.user) {
+    auth.fetchUserByToken();
+  }
   intervalId = setInterval(updateTime, 1000);
 });
+
 onUnmounted(() => {
   clearInterval(intervalId);
 });
 </script>
 
 <template>
-  <header class="flex flex-row items-center justify-between w-full h-16 p-6 bg-white lg:tw-flex tw-px-4 2xl:hidden">
+  <header
+    class="flex flex-row items-center justify-between w-full h-16 p-6 bg-white lg:tw-flex tw-px-4 2xl:hidden"
+  >
     <div class="flex">
       <p class="font-bold text-blue-800">
         {{ currentTime }}

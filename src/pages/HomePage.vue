@@ -1,18 +1,5 @@
 <script setup>
-import { onMounted } from "vue";
 import { menu } from "../lib/listmenu"
-import { useAuthStore } from "@/store/modules/auth";
-
-const auth = useAuthStore();
-
-onMounted(async () => {
-  try {
-    // eslint-disable-next-line
-    const response = await auth.fetchUserByToken();
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-});
 
 </script>
 <template>

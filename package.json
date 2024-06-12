@@ -8,10 +8,16 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@tanstack/match-sorter-utils": "^8.15.1",
+    "@tanstack/vue-table": "^8.17.3",
     "axios": "^1.6.8",
+    "bootstrap-vue-next": "^0.21.2",
     "core-js": "^3.8.3",
     "dotenv": "^16.4.5",
+    "fuse.js": "^7.0.0",
+    "gsap": "^3.12.5",
     "pinia": "^2.1.7",
+    "qs": "^6.12.1",
     "sass": "^1.72.0",
     "sass-loader": "^14.1.1",
     "v-wave": "^2.0.0",
