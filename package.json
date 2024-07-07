@@ -25,12 +25,15 @@
     "vue-jsonp": "^2.0.0",
     "vue-loader": "^17.4.2",
     "vue-router": "^4.3.0",
+    "vue3-select": "^0.1.2",
     "vuex": "^4.1.0",
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@babel/plugin-transform-react-jsx": "^7.24.7",
+    "@vue/babel-plugin-jsx": "^1.2.2",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

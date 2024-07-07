@@ -125,6 +125,11 @@ export const game = [
     keterangan: "Honkai Star Rail",
   },
   {
+    name: "Honor of Kings",
+    form: "User ID",
+    keterangan: "Honor of Kings awdasdaw",
+  },
+  {
     name: "Hyper Front",
     form: "User ID",
     keterangan: "Hyper Front",
