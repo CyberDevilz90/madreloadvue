@@ -32,8 +32,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <p>Buzzerpanel : {{ formatPrice(parseInt(balanceBuzzerpanel)) }}</p>
-  <p>DigiFlazz : {{ formatPrice(balanceDigiflazz) }}</p>
+  <div class="flex flex-col items-center m-3">
+    <div class="flex">
+      <img src="../assets/icons/buzzerpanel.png" class="w-8 h-8" />
+      <p>Buzzerpanel : {{ formatPrice(parseInt(balanceBuzzerpanel)) }}</p>
+    </div>
+    <div class="flex">
+      <img src="../assets/icons/digiflazz.png" class="w-6 h-6" />
+      <p>DigiFlazz : {{ formatPrice(balanceDigiflazz) }}</p>
+    </div>
+  </div>
   <div class="flex flex-row justify-center gap-2 p-5">
     <RouterLink to="/admin/set-margin">
       <img
@@ -42,6 +50,14 @@ onMounted(() => {
         alt="logo"
       />
       <p class="text-center">Margin Omset</p>
+    </RouterLink>
+    <RouterLink to="/admin/topup-manual">
+      <img
+        class="w-[200px]"
+        src="../assets/images/madreloadIcon.png"
+        alt="logo"
+      />
+      <p class="text-center">Manage Order</p>
     </RouterLink>
     <RouterLink to="/admin/manage-user">
       <img
