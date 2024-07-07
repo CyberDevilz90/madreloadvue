@@ -4,24 +4,28 @@ import { formatPrice } from "../../lib/utils";
 import { pulsaProviders } from "@/lib/provider";
 import axios from "axios";
 import ListProduct from "../../components/ui/ListProduct.vue";
+import { useAuthStore } from "@/store/modules/auth";
+import Loader from "@/components/ui/Loader.vue";
+import router from "@/router";
 
+const isLoading = ref(false)
+const authStore = useAuthStore();
 const selectedProvider = ref("");
 const selectedType = ref("");
 const selectedProducts = ref([]);
 const listProviders = pulsaProviders.map((data) => data);
-// eslint-disable-next-line
-let buyer_sku_code = ref(null);
-let nomor_pelanggan = ref(null);
-let listProdukPulsa = ref([]);
+const buyer_sku_code = ref(""); // Use ref for reactivity
+const nomor_pelanggan = ref(""); // Use ref for reactivity
+const listProdukPulsa = ref([]);
 
 async function fetchData() {
   try {
-    const apiUrl = `${
-      process.env.VUE_APP_BE_API_URL || "http://127.0.0.1:5000"
-    }/product/list-ppob`;
+    isLoading.value = true;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/product/list-ppob`;
     const response = await axios.get(apiUrl);
     listProdukPulsa.value = response.data.data; // Store fetched data
     filterProducts(); // Filter products based on initial state
+    isLoading.value = false
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -45,22 +49,52 @@ function filterProducts() {
 }
 
 function selectProduct(productId) {
-  buyer_sku_code = productId;
+  buyer_sku_code.value = productId; // Update ref value
   selectedProducts.value.forEach((product) => {
     product.selected = product.buyer_sku_code === productId;
   });
+}
+
+async function checkout() {
+  if (!buyer_sku_code.value || !nomor_pelanggan.value) {
+    alert("Please select a product and enter the customer number.");
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/transactions/create-order`;
+    const payload = {
+      buyer_sku_code: buyer_sku_code.value,
+      customer_no: nomor_pelanggan.value,
+      user_id: `${authStore.user.id}` // Get user ID from auth store
+    };
+    // eslint-disable-next-line
+    const response = await axios.post(apiUrl, payload);
+    isLoading.value = false
+    router.go(-1)
+  } catch (error) {
+    console.error("Error performing transaction:", error);
+  }
 }
 
 onMounted(() => {
   fetchData();
 });
 </script>
+
 <template>
+   <div
+    v-if="isLoading"
+    class="absolute inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75"
+  >
+    <Loader width="100px" height="100px" />
+  </div>
   <div class="p-5 mb-5">
     <div class="flex justify-center gap-3 p-5 mb-5 card">
       <input
         class="w-1/4 p-[8px] rounded-md"
-        type="number"
+        type="text"
         placeholder="Nomor Tujuan"
         v-model.lazy="nomor_pelanggan"
       />
@@ -90,6 +124,7 @@ onMounted(() => {
       </select>
       <div
         class="w-1/4 p-[8px] rounded-md text-center bg-green-600 hover:cursor-pointer"
+        @click="checkout"
       >
         <p class="font-bold text-white">Checkout</p>
       </div>
@@ -102,6 +137,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
 <style scoped>
 .card {
   border: 1px solid #ffffff;
