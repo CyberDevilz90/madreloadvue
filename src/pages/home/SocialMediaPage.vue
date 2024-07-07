@@ -1,29 +1,48 @@
 <script setup>
-import { ref, watch } from "vue";
-import { listSocialMedia } from "../../lib/socialMedia";
+import { ref, watch, onMounted } from "vue";
 import { formatPrice } from "../../lib/utils";
 import { rule } from "../../lib/peraturan";
-
+import axios from "axios";
+import Loader from "@/components/ui/Loader.vue";
 import SocialMediaRule from "../../components/ui/SocialMediaRule.vue";
+import VueSelect from "vue3-select";
+import "vue3-select/dist/vue3-select.css";
 
+const isLoading = ref(false);
+const listSocialMedia = ref([]);
 const selectedCategory = ref("");
 const selectedProduct = ref("");
 const selectedProducts = ref([]);
-const listCategories = [
-  ...new Set(listSocialMedia.map((product) => product.category)),
-];
+const listCategories = ref([]);
 const commentInput = ref("");
 const totalPrice = ref(null);
 const jumlahInput = ref("");
 const userId = ref("");
 
+const getPriceListPPOB = async () => {
+  isLoading.value = true;
+  const url = `${process.env.VUE_APP_BE_API_URL}/product/list-social-media`;
+  try {
+    const response = await axios.get(url);
+    listSocialMedia.value = response.data.data;
+    listCategories.value = [
+      ...new Set(listSocialMedia.value.map((product) => product.category)),
+    ];
+    filterProducts();
+    isLoading.value = false;
+  } catch (e) {
+    console.error(e);
+    isLoading.value = false;
+  }
+};
+
 function filterProducts() {
-  selectedProducts.value = listSocialMedia.filter((product) => {
+  selectedProducts.value = listSocialMedia.value.filter((product) => {
     return product.category === selectedCategory.value;
   });
   selectedProducts.value.sort((a, b) => a.price - b.price);
   selectedProducts.value.forEach((product) => {
-    product.formattedPrice = formatPrice(product.price);
+    product.formattedPrice = formatPrice(parseInt(product.price));
   });
   selectedProduct.value = null;
 }
@@ -33,14 +52,13 @@ function selectProduct(productId) {
     (product) => product.id === productId
   );
   if (product) {
-    selectedProduct.value = product.id; // Ubah menjadi ID produk yang dipilih
-    product.formattedPrice = formatPrice(product.price); // Format harga produk
+    selectedProduct.value = product.id;
+    product.formattedPrice = formatPrice(parseInt(product.price));
   } else {
-    selectedProduct.value = null;
+    selectedProduct.value = "";
   }
 }
 
-// Fungsi untuk menghitung total harga
 function calculateTotalPrice() {
   const selectedProd = selectedProducts.value.find(
     (p) => p.id === selectedProduct.value
@@ -48,10 +66,9 @@ function calculateTotalPrice() {
   if (selectedProd) {
     const jumlah = jumlahInput.value ? parseInt(jumlahInput.value) : 0;
     const hargaPer1000 = parseInt(selectedProd.price);
-    // Hitung total harga
     totalPrice.value = Math.ceil((jumlah / 1000) * hargaPer1000);
   } else {
-    totalPrice.value = null;
+    totalPrice.value = 0;
   }
 }
 
@@ -62,9 +79,19 @@ watch(
     calculateTotalPrice();
   }
 );
+
+onMounted(() => {
+  getPriceListPPOB();
+});
 </script>
 
 <template>
+  <div
+    v-if="isLoading"
+    class="absolute inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75"
+  >
+    <Loader width="100px" height="100px" />
+  </div>
   <div class="w-full p-5 mb-5">
     <div class="flex justify-center gap-3 p-5 card">
       <input
@@ -77,7 +104,7 @@ watch(
         class="w-1/3 p-[8px] rounded-md"
         type="text"
         placeholder="Jumlah"
-        v-model="jumlahInput"
+        v-model.lazy="jumlahInput"
         :min="
           selectedProduct
             ? selectedProducts.find((p) => p.id === selectedProduct).min
@@ -89,22 +116,17 @@ watch(
             : ''
         "
       />
-      <select
-        @change="filterProducts"
-        v-model="selectedCategory"
-        class="w-1/3 p-[8px] rounded-md ml-3"
-      >
-        <option value="">Pilih Category</option>
-        <option
-          v-for="category in listCategories"
-          :value="category"
-          :key="category"
-        >
-          {{ category }}
-        </option>
-      </select>
     </div>
-    <div class="flex justify-center pt-5 mt-5 card">
+    <div class="flex flex-col justify-center pt-5 mt-5 card">
+      <p>Category :</p>
+      <vue-select
+        :options="listCategories"
+        v-model="selectedCategory"
+        placeholder="Pilih Category"
+        @input="filterProducts"
+        class="w-full p-[8px] rounded-md bg-white mb-2"
+      ></vue-select>
+      <p>Layanan :</p>
       <select
         @change="selectProduct($event.target.value)"
         v-model="selectedProduct"
@@ -164,7 +186,6 @@ watch(
           class="bg-gradient-to-r from-cyan-500 to-blue-500 mt-[-1rem] text-center rounded-b-full h-8 mb-4 flex items-center justify-center"
         >
           <p class="text-sm font-bold text-white">
-            Rp
             {{
               selectedProducts.find((p) => p.id === selectedProduct)
                 .formattedPrice
@@ -200,7 +221,7 @@ watch(
       </div>
     </div>
     <p v-if="totalPrice !== null" class="text-center">
-      Total = Rp {{ totalPrice }}
+      Total = {{ formatPrice(totalPrice) }}
     </p>
     <div
       class="w-full p-[8px] mt-5 mb-5 text-center bg-green-600 rounded-md hover:cursor-pointer"
