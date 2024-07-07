@@ -73,9 +73,10 @@ export const useAuthStore = defineStore({
             'Authorization': `Bearer ${this.token}`
           }
         });
-        const userData = response.data.data;
+        const userData = response.data;
         this.user = { ...this.user, ...userData }; // Merge new user data with existing state
         this.status = 'success';
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
         return response;
       } catch (error) {
         this.auth_error();
