@@ -2,6 +2,9 @@
 import router from "@/router";
 import axios from "axios";
 import { ref, onMounted } from "vue";
+import Loader from "@/components/ui/Loader.vue";
+
+const isLoading = ref(false);
 
 const margin = ref(null);
 const pulsa = ref(0);
@@ -30,6 +33,7 @@ async function getMargin() {
 
 async function updateMargin() {
   try {
+    isLoading.value = true;
     // eslint-disable-next-line
     const response = await axios.post(
       "http://localhost:5000/margin/update-margin",
@@ -43,6 +47,7 @@ async function updateMargin() {
         paket_data: paket_data.value,
       }
     );
+    isLoading.value = false;
     router.go(-1);
   } catch (error) {
     console.error("Error updating margin:", error);
@@ -58,6 +63,12 @@ onMounted(() => {
 });
 </script>
 <template>
+  <div
+    v-if="isLoading"
+    class="absolute inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75"
+  >
+    <Loader width="100px" height="100px" />
+  </div>
   <div class="flex flex-col items-center w-full gap-2 p-5">
     <table class="w-1/2 rounded-lg bg-slate-300">
       <tr>
@@ -195,14 +206,14 @@ onMounted(() => {
     </table>
     <div>
       <input
-        class="p-3 mr-2 font-bold text-white bg-red-500 rounded-lg"
+        class="p-3 mr-2 font-bold text-white bg-red-500 rounded-lg cursor-pointer"
         type="button"
         id="cancel"
         value="Batal"
         @click="cancel"
       />
       <input
-        class="p-3 font-bold text-white bg-blue-500 rounded-lg"
+        class="p-3 font-bold text-white bg-blue-500 rounded-lg cursor-pointer"
         type="button"
         id="submit"
         value="Simpan"
