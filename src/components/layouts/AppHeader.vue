@@ -14,7 +14,7 @@ const updateTime = () => {
 };
 
 const formattedSaldo = computed(() => {
-  return auth.user && auth.user.saldo ? formatPrice(auth.user.saldo) : "N/A";
+  return auth.user && auth.user.saldo ? formatPrice(auth.user.saldo) : formatPrice(0);
 });
 
 onMounted(() => {
