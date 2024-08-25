@@ -59,8 +59,12 @@ const resetBrand = () => {
   selectedBrand.value = "";
 };
 
-const getStatus = (status) => {
-  return status === "true" ? "Lancar" : "Gangguan";
+const getStatus = (seller_status, buyer_status) => {
+  if (seller_status === "true" && buyer_status === "true") {
+    return "Lancar";
+  } else {
+    return "Gangguan";
+  }
 };
 
 onMounted(() => {
@@ -102,18 +106,34 @@ watch(selectedCategory, () => {
     </div>
     <table class="w-full">
       <tr class="bg-white">
+        <th>Kode Produk</th>
         <th>Nama</th>
         <th>Brand</th>
         <th>Category</th>
         <th>Price</th>
         <th>Status</th>
       </tr>
-      <tr v-for="x in filteredData" :key="x.buyer_sku_code" class="p-2 m-4 bg-slate-50">
+      <tr
+        v-for="x in filteredData"
+        :key="x.buyer_sku_code"
+        class="p-2 m-4 bg-slate-50"
+      >
+        <td class="text-center w-[5%]">{{ x.buyer_sku_code }}</td>
         <td class="text-center w-[40%]">{{ x.product_name }}</td>
         <td class="text-center w-[15%]">{{ x.brand }}</td>
         <td class="text-center w-[15%]">{{ x.category }}</td>
         <td class="text-center w-[15%]">{{ formatPrice(x.price) }}</td>
-        <td class="text-center w-[15%]">{{ getStatus(x.seller_product_status) }}</td>
+        <td
+          :class="[
+            'text-center w-[15%]',
+            x?.seller_product_status == 'true' &&
+            x?.buyer_product_status == 'true'
+              ? 'bg-green-500'
+              : 'bg-red-500',
+          ]"
+        >
+          {{ getStatus(x.seller_product_status, x.buyer_product_status) }}
+        </td>
       </tr>
     </table>
   </div>
