@@ -3,7 +3,7 @@ import { currentYear } from "@/lib/utils";
 </script>
 <template>
   <footer class="flex self-center justify-center w-full">
-    <div class="w-full h-full bg-white rounded-lg ">
+    <div class="w-full h-full rounded-lg ">
       <div class="flex flex-col items-center justify-center gap-1">
         <div class="mt-2">
           <i class="text-sm mdi mdi-whatsapp"></i>
@@ -17,7 +17,7 @@ import { currentYear } from "@/lib/utils";
           <i class="text-sm mdi mdi-google-maps"></i>
           <span class="text-xs">
             Alamat : Kel. Kalangan, Kec. Pedan, Kab. Klaten, Jawa
-            Tengah</span
+            Tengah 57468</span
           >
         </div>
         <div class="mt-2">

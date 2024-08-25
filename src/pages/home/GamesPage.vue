@@ -1,24 +1,27 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { formatPrice } from "../../lib/utils";
 import { game } from "../../lib/listGame";
 import axios from "axios";
-
+import { useAuthStore } from "@/store/modules/auth";
+import router from "@/router"; // Import router
 import ListProduct from "../../components/ui/ListProduct.vue";
 
-let listProdukPulsa = ref([]);
+const isLoading = ref(false);
+const authStore = useAuthStore();
+const listProdukPulsa = ref([]);
 const selectedProducts = ref([]);
 const gameOptions = ref(game);
 const selectedGame = ref("");
-let userId = ref("");
+const nomor_pelanggan = ref("");
+const keteranganProduct = ref("");
+const buyer_sku_code = ref(""); // Add this ref for selected product
 
 async function fetchData() {
   try {
-    const apiUrl = `${
-      process.env.VUE_APP_BE_API_URL || "http://127.0.0.1:5000"
-    }/product/list-ppob`;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/product/list-ppob`;
     const response = await axios.get(apiUrl);
-    listProdukPulsa.value = response.data.data; // Store fetched data
+    listProdukPulsa.value = response.data.data; // Ensure correct data access
     filterSelectedProducts(); // Filter products based on initial state
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -29,7 +32,8 @@ const filterSelectedProducts = () => {
   selectedProducts.value = listProdukPulsa.value
     .filter((product) => {
       return (
-        product.category === "Games" && product.brand === selectedGame.value
+        product.category === "Games" && 
+        product.brand === selectedGame.value
       );
     })
     .map((product) => {
@@ -46,9 +50,22 @@ const filterSelectedProducts = () => {
 };
 
 function selectProduct(productId) {
-  selectedProducts.value.forEach((product) => {
-    product.selected = product.buyer_sku_code === productId; // Menandai produk yang dipilih
-  });
+  // Cari produk yang dipilih
+  const selectedProduct = selectedProducts.value.find(
+    (product) => product.buyer_sku_code === productId
+  );
+  
+  if (selectedProduct) {
+    // Set buyer_sku_code dengan kode produk yang dipilih
+    buyer_sku_code.value = selectedProduct.buyer_sku_code;
+    // Update keterangan produk
+    keteranganProduct.value = selectedProduct.desc;
+    
+    // Tandai produk sebagai dipilih
+    selectedProducts.value.forEach((product) => {
+      product.selected = product.buyer_sku_code === productId;
+    });
+  }
 }
 // Fungsi untuk mendapatkan keterangan permainan yang dipilih
 const getGameKeterangan = (selectedGameName) => {
@@ -56,25 +73,54 @@ const getGameKeterangan = (selectedGameName) => {
   return game ? game.keterangan : "";
 };
 
+async function checkout() {
+  if (!buyer_sku_code.value || nomor_pelanggan.value == "") { // Check for required fields
+    alert("Please select a product and enter the customer number.");
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/transactions/create-order`;
+    console.log(nomor_pelanggan.value)
+    const payload = {
+      customer_no: nomor_pelanggan.value,
+      buyer_sku_code: buyer_sku_code.value,
+      user_id: `${authStore.user.id}` 
+    };
+    // eslint-disable-next-line
+    const response = await axios.post(apiUrl, payload);
+    isLoading.value = false;
+    router.go(-1); // Go back after successful checkout
+  } catch (error) {
+    if (error.response && error.response.data.error === "Insufficient balance") {
+      alert("Saldo Tidak Cukup, Silahkan Top Up Saldo Terlebih Dahulu");
+      isLoading.value = false;
+    } else {
+      console.error("Error performing transaction:", error);
+      isLoading.value = false;
+    }
+  }
+}
+
 // Memanggil fungsi filterSelectedProducts saat perubahan pada selectedGame
 watch(selectedGame, () => {
+  filterSelectedProducts();
+});
+
+onMounted(() => {
   fetchData();
 });
 
-// Fungsi untuk checkout
-const checkout = () => {
-  // Lakukan logika checkout di sini
-  console.log("Checkout triggered");
-};
 </script>
 
 <template>
   <div class="p-5 mb-5">
     <div class="flex justify-center gap-3 p-5 mb-5 card">
       <input
-        v-model="userId"
+        v-model="nomor_pelanggan"
         class="w-1/3 p-[8px] rounded-md"
-        type="number"
+        type="text"
         placeholder="User ID"
       />
       <select
@@ -98,9 +144,10 @@ const checkout = () => {
         <p class="font-bold text-white">Checkout</p>
       </div>
     </div>
-    <div class="flex justify-center gap-3 p-5 mb-5 card">
+    <div class="flex flex-col items-center gap-3 p-5 mb-5 card">
       {{ selectedGame }}
       <p>Keterangan : {{ getGameKeterangan(selectedGame) }}</p>
+      <p>{{ keteranganProduct }}</p>
     </div>
 
     <div class="p-5 card">

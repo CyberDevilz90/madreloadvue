@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/modules/auth";
 import Loader from "@/components/ui/Loader.vue";
 import router from "@/router";
 
-const isLoading = ref(false)
+const isLoading = ref(false);
 const authStore = useAuthStore();
 const selectedProvider = ref("");
 const selectedType = ref("");
@@ -74,7 +74,13 @@ async function checkout() {
     isLoading.value = false
     router.go(-1)
   } catch (error) {
-    console.error("Error performing transaction:", error);
+    if (error.response && error.response.data.error === "Insufficient balance") {
+      alert("Saldo Tidak Cukup, Silahkan Top Up Saldo Terlebih Dahulu");
+      isLoading.value = false;
+    } else {
+      console.error("Error performing transaction:", error);
+      isLoading.value = false;
+    }
   }
 }
 

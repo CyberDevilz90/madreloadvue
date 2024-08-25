@@ -1,20 +1,20 @@
 <script setup>
-import { ref, watch } from "vue";
-// import { listProdukPulsa } from "../../lib/produkPulsa";
+import { ref, watch, onMounted } from "vue";
 import { formatPrice } from "../../lib/utils";
 import { wallet } from "../../lib/ewallet";
+import { useAuthStore } from "@/store/modules/auth";
+import router from "@/router";
+import ListProduct from "@/components/ui/ListProduct.vue";
 import axios from "axios";
 
-import ListProduct from "@/components/ui/ListProduct.vue";
-
-// const filteredProducts = ref([]);
-let userId = ref("");
-
-// Filter produk berdasarkan merek yang valid
-let listProdukPulsa = ref([])
+const isLoading = ref(false);
+const authStore = useAuthStore();
+const listProdukPulsa = ref([])
 const selectedProducts = ref([]);
 const gameOptions = ref(wallet);
 const selectedGame = ref("");
+const userId = ref("");
+const buyer_sku_code = ref("");
 
 async function fetchData() {
   try {
@@ -32,7 +32,8 @@ async function fetchData() {
 const filterSelectedProducts = () => {
   selectedProducts.value = listProdukPulsa.value
     .filter((product) => {
-      return product.category === "E-Money" && product.brand === selectedGame.value;
+      return product.category === "E-Money" && 
+      product.brand === selectedGame.value;
     })
     .map((product) => {
       return {
@@ -56,21 +57,51 @@ const getGameKeterangan = (selectedGameName) => {
 };
 
 function selectProduct(productId) {
+  buyer_sku_code.value = productId;
   selectedProducts.value.forEach((product) => {
     product.selected = product.buyer_sku_code === productId; // Menandai produk yang dipilih
   });
 }
 
+async function checkout() {
+  if (!buyer_sku_code.value || userId.value == "") { // Check for required fields
+    alert("Please select a product and enter the customer number.");
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/transactions/create-order`;
+    console.log(userId.value)
+    const payload = {
+      customer_no: userId.value,
+      buyer_sku_code: buyer_sku_code.value,
+      user_id: `${authStore.user.id}` 
+    };
+    // eslint-disable-next-line
+    const response = await axios.post(apiUrl, payload);
+    isLoading.value = false;
+    router.go(-1); // Go back after successful checkout
+  } catch (error) {
+    if (error.response && error.response.data.error === "Insufficient balance") {
+      alert("Saldo Tidak Cukup, Silahkan Top Up Saldo Terlebih Dahulu");
+      isLoading.value = false;
+    } else {
+      console.error("Error performing transaction:", error);
+      isLoading.value = false;
+    }
+  }
+}
+
 // Memanggil fungsi filterSelectedProducts saat perubahan pada selectedGame
 watch(selectedGame, () => {
+  filterSelectedProducts();
+});
+
+onMounted(() => {
   fetchData();
 });
 
-// Fungsi untuk checkout
-const checkout = () => {
-  // Lakukan logika checkout di sini
-  console.log("Checkout triggered");
-};
 </script>
 
 <template>
@@ -79,7 +110,7 @@ const checkout = () => {
       <input
         v-model="userId"
         class="w-1/3 p-[8px] rounded-md"
-        type="number"
+        type="text"
         placeholder="No Pelanggan"
       />
       <select

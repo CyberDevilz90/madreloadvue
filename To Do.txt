@@ -1,0 +1,45 @@
+Layout
+- Footer
+
+Home
+- icon menu
+- Improve UI
+
+History
+- Improve UI
+
+Product
+- Improve UI
+
+Profile
+- Avatar
+	- Tombol Ganti Avatar
+- Tombol Edit Profile
+- Saldo
+- Nama
+- Email
+- Telepon
+- TOmbol Ganti Password
+- Tombol Logout
+
+Admin
+- Tambah Kategori
+	- Gambar
+	- Nama
+ 	- Form
+	- Keterangan
+	- Tombol simpan
+	- Tombol Batal
+
+- Manage User
+	- Ubah Role User
+	- Hapus User
+	- Tambah User
+	- Tombol Simpan
+	- Tombol Batal
+
+- Top Up Manual
+	- Tambah Saldo User
+	- Kurang Saldo User
+	- Tombol Simpan
+	- Tombol Batal

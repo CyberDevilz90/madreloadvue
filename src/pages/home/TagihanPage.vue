@@ -2,10 +2,13 @@
 import { ref, watch, onMounted } from "vue";
 import axios from "axios";
 import { formatPrice } from "../../lib/utils";
-
+import { useAuthStore } from "@/store/modules/auth";
+import router from "@/router";
 
 import ListProduct from "@/components/ui/ListProduct.vue";
 
+const authStore = useAuthStore()
+const isLoading = ref(false);
 const apiResponse = ref("");
 const userId = ref("");
 const pesanError = ref("");
@@ -39,7 +42,7 @@ function filterProducts() {
 }
 
 const selectProduct = (productId) => {
-  buyer_sku_code = productId
+  buyer_sku_code.value = productId
   selectedProducts.value.forEach((product) => {
     product.selected = product.buyer_sku_code === productId; 
   });
@@ -60,9 +63,34 @@ const handleInputCompletion = () => {
     });
 };
 
-const checkout = () => {
-  // Lakukan logika checkout di sini
-  console.log("Checkout triggered");
+const checkout = async() => {
+  if (!buyer_sku_code.value || !userId.value) {
+    console.log(buyer_sku_code, userId.value)
+    alert("Please select a product and enter the customer number.");
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/transactions/create-order`;
+    const payload = {
+      buyer_sku_code: buyer_sku_code.value,
+      customer_no: userId.value,
+      user_id: `${authStore.user.id}` // Get user ID from auth store
+    };
+    // eslint-disable-next-line
+    const response = await axios.post(apiUrl, payload);
+    isLoading.value = false
+    router.go(-1)
+  } catch (error) {
+    if (error.response && error.response.data.error === "Insufficient balance") {
+      alert("Saldo Tidak Cukup, Silahkan Top Up Saldo Terlebih Dahulu");
+      isLoading.value = false;
+    } else {
+      console.error("Error performing transaction:", error);
+      isLoading.value = false;
+    }
+  }
 };
 
 watch(userId, () => {

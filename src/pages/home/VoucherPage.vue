@@ -1,30 +1,39 @@
 <script setup>
-import { ref, watch } from "vue";
-import { listProdukPulsa } from "../../lib/produkPulsa";
+import { ref, watch, onMounted } from "vue";
 import { formatPrice } from "../../lib/utils";
 import { voucher } from "../../lib/voucher";
-
+import axios from "axios";
+import { useAuthStore } from "@/store/modules/auth";
+import router from "@/router"; // Import router
 import ListProduct from "@/components/ui/ListProduct.vue";
 
-const filteredProducts = ref([]);
-let userId = ref("");
-
-listProdukPulsa.forEach((product) => {
-  if (product.category === "Voucher") {
-    filteredProducts.value.push(product);
-  }
-});
-
-// Filter produk berdasarkan merek yang valid
+const isLoading = ref(false);
+const authStore = useAuthStore();
+const listProdukPulsa = ref([]);
 const selectedProducts = ref([]);
 const gameOptions = ref(voucher);
 const selectedGame = ref("");
+const nomor_pelanggan = ref("");
+const buyer_sku_code = ref("");
 
-// Memfilter produk berdasarkan merek (brand) permainan yang dipilih
+async function fetchData() {
+  try {
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/product/list-ppob`;
+    const response = await axios.get(apiUrl);
+    listProdukPulsa.value = response.data.data; // Ensure correct data access
+    filterSelectedProducts(); // Filter products based on initial state
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
 const filterSelectedProducts = () => {
-  selectedProducts.value = filteredProducts.value
+  selectedProducts.value = listProdukPulsa.value
     .filter((product) => {
-      return product.brand === selectedGame.value;
+      return (
+        product.category === "Voucher" && 
+        product.brand === selectedGame.value
+      );
     })
     .map((product) => {
       return {
@@ -48,30 +57,58 @@ const getGameKeterangan = (selectedGameName) => {
 };
 
 function selectProduct(productId) {
+  buyer_sku_code.value = productId;
   selectedProducts.value.forEach((product) => {
     product.selected = product.buyer_sku_code === productId; // Menandai produk yang dipilih
   });
 }
 
+async function checkout() {
+  if (!buyer_sku_code.value || nomor_pelanggan.value == "") { // Check for required fields
+    alert("Please select a product and enter the customer number.");
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+    const apiUrl = `${process.env.VUE_APP_BE_API_URL}/transactions/create-order`;
+    console.log(nomor_pelanggan.value)
+    const payload = {
+      customer_no: nomor_pelanggan.value,
+      buyer_sku_code: buyer_sku_code.value,
+      user_id: `${authStore.user.id}` 
+    };
+    // eslint-disable-next-line
+    const response = await axios.post(apiUrl, payload);
+    isLoading.value = false;
+    router.go(-1); // Go back after successful checkout
+  } catch (error) {
+    if (error.response && error.response.data.error === "Insufficient balance") {
+      alert("Saldo Tidak Cukup, Silahkan Top Up Saldo Terlebih Dahulu");
+      isLoading.value = false;
+    } else {
+      console.error("Error performing transaction:", error);
+      isLoading.value = false;
+    }
+  }
+}
+
+onMounted(() => {
+  fetchData();
+});
 // Memanggil fungsi filterSelectedProducts saat perubahan pada selectedGame
 watch(selectedGame, () => {
   filterSelectedProducts();
 });
-
-// Fungsi untuk checkout
-const checkout = () => {
-  // Lakukan logika checkout di sini
-  console.log("Checkout triggered");
-};
 </script>
 
 <template>
   <div class="p-5 mb-5">
     <div class="flex justify-center gap-3 p-5 mb-5 card">
       <input
-        v-model="userId"
+        v-model="nomor_pelanggan"
         class="w-1/3 p-[8px] rounded-md"
-        type="number"
+        type="text"
         placeholder="No Pelanggan (Bebas di isi apapun)"
       />
       <select
