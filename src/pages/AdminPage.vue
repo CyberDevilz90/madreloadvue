@@ -46,7 +46,7 @@ onMounted(() => {
     <RouterLink to="/admin/set-margin">
       <img
         class="w-[200px]"
-        src="../assets/images/madreloadIcon.png"
+        src="../assets/icons/profit.png"
         alt="logo"
       />
       <p class="text-center">Margin Omset</p>
