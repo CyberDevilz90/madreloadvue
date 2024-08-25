@@ -50,23 +50,12 @@ const filterSelectedProducts = () => {
 };
 
 function selectProduct(productId) {
-  // Cari produk yang dipilih
-  const selectedProduct = selectedProducts.value.find(
-    (product) => product.buyer_sku_code === productId
-  );
-  
-  if (selectedProduct) {
-    // Set buyer_sku_code dengan kode produk yang dipilih
-    buyer_sku_code.value = selectedProduct.buyer_sku_code;
-    // Update keterangan produk
-    keteranganProduct.value = selectedProduct.desc;
-    
-    // Tandai produk sebagai dipilih
-    selectedProducts.value.forEach((product) => {
-      product.selected = product.buyer_sku_code === productId;
-    });
-  }
+  buyer_sku_code.value = productId;
+  selectedProducts.value.forEach((product) => {
+    product.selected = product.buyer_sku_code === productId; // Menandai produk yang dipilih
+  });
 }
+
 // Fungsi untuk mendapatkan keterangan permainan yang dipilih
 const getGameKeterangan = (selectedGameName) => {
   const game = gameOptions.value.find((game) => game.name === selectedGameName);
