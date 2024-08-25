@@ -389,4 +389,9 @@ export const game = [
     form: "User ID",
     keterangan: "YS 6 Mobile VNG",
   },
+  {
+    name: "Zenless Zone Zero",
+    form: "User ID",
+    keterangan: "-",
+  },
 ];
