@@ -13,7 +13,7 @@ const getHistoryPPOB = async () => {
   const url = `${process.env.VUE_APP_BE_API_URL}/history/ppob`;
   try {
     const response = await axios.get(url);
-    historyPPOB.value = response.data.data;
+    historyPPOB.value = response.data.data.sort((a, b) => new Date(b.tanggal_order) - new Date(a.tanggal_order));
   } catch (err) {
     error.value = err.response.data.message || "An error occurred";
   }

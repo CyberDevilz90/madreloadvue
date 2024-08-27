@@ -13,7 +13,7 @@ const getHistorySMM = async () => {
   const url = `${process.env.VUE_APP_BE_API_URL}/history/smm`;
   try {
     const response = await axios.get(url);
-    historySMM.value = response.data.data;
+    historySMM.value = response.data.data.sort((a, b) => new Date(b.tanggal_order) - new Date(a.tanggal_order));
   } catch (err) {
     error.value = err.response.data.message || "An error occurred";
   }
