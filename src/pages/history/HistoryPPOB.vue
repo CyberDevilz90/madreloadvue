@@ -38,6 +38,7 @@ onMounted(() => {
           <th>Nama</th>
           <th>Tujuan</th>
           <th>Harga</th>
+          <th>SN/Ket</th>
           <th>Status</th>
           <th>Tanggal</th>
         </tr>
@@ -47,12 +48,13 @@ onMounted(() => {
           class="p-2 m-4 bg-slate-50"
         >
           <th class="w-[5%]">{{ item.id }}</th>
-          <th class="text-center w-[40%]">{{ item.product_name }}</th>
-          <th class="text-center w-[15%]">{{ item.customer_no }}</th>
-          <th class="text-center w-[15%]">{{ formatPrice(item.price) }}</th>
+          <th class="text-center w-[20%]">{{ item.product_name }}</th>
+          <th class="text-center w-[10%]">{{ item.customer_no }}</th>
+          <th class="text-center w-[10%]">{{ formatPrice(item.price) }}</th>
+          <th class="text-center w-[35%]">{{ formatPrice(item.sn) }}</th>
           <th
             :class="[
-              'text-center w-[15%] text-white',
+              'text-center w-[10%] text-white',
               item.status == 'Pending'
                 ? 'bg-yellow-300'
                 : item.status == 'Sukses'
@@ -64,7 +66,7 @@ onMounted(() => {
           >
             {{ item.status }}
           </th>
-          <th class="text-center w-[15%]">
+          <th class="text-center w-[10%]">
             {{ formatDate(item.tanggal_order) }}
           </th>
         </tr>
