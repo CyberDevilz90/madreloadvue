@@ -71,7 +71,6 @@ async function checkout() {
   try {
     isLoading.value = true;
     const apiUrl = `${process.env.VUE_APP_BE_API_URL}/transactions/create-order`;
-    console.log(nomor_pelanggan.value)
     const payload = {
       customer_no: nomor_pelanggan.value,
       buyer_sku_code: buyer_sku_code.value,
