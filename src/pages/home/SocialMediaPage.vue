@@ -90,7 +90,6 @@ async function checkout() {
       quantity: jumlahInput.value,
       price: totalPrice.value,
     }
-    console.log(payload)
     //eslint-disable-next-line
     const response = await axios.post(apiUrl, payload)
     isLoading.value = false
